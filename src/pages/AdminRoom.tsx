@@ -4,6 +4,7 @@ import logoImg from '../assets/images/logo.svg';
 import deleteImg from '../assets/images/delete.svg';
 import checkImg from '../assets/images/check.svg';
 import answerImg from '../assets/images/answer.svg';
+import emptyQuestionImg from '../assets/images/Group-2.png';
 
 import { Button } from '../components/Button';
 import { Question } from '../components/Question';
@@ -53,6 +54,8 @@ export function AdminRoom() {
         });
     }
 
+    let questionListIsEmpty = (questions.length == 0);
+
     return (
 
         <div id="page-room">
@@ -61,7 +64,7 @@ export function AdminRoom() {
 
                     <img src={logoImg}
                         alt="Letmeask"
-                        onClick={()=> window.location.href="/"}
+                        onClick={() => window.location.href = "/"}
                     />
                     <div>
                         <RoomCode code={roomId} />
@@ -75,9 +78,21 @@ export function AdminRoom() {
                     <h1>Sala: {title}</h1>
                     {questions.length > 0 && <span>{questions.length} pergunta(s)</span>}
                 </div>
-
+                
+                
                 <div className='question-list'>
+
+                    {questionListIsEmpty && 
+                    <div className='Balloons'>
+                        <img 
+                            src={emptyQuestionImg}
+                            alt="Sem perguntas"
+                        />
+                    </div>
+                    }
+                    
                     {questions.map((question) => {
+
                         return (
                             <Question
                                 key={question.id}
@@ -104,13 +119,18 @@ export function AdminRoom() {
                                     </>
                                 )}
 
+
                                 <button
                                     type="button"
                                     onClick={() => HandleDeleteQuestion(question.id)}
                                 >
                                     <img src={deleteImg} alt="Remover pergunta" />
                                 </button>
+
+
                             </Question>
+
+
                         )
                     })}
                 </div>

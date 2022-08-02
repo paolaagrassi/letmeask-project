@@ -1,5 +1,5 @@
 import { FormEvent, useState } from 'react';
-import {useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import logoImg from '../assets/images/logo.svg';
 import { Button } from '../components/Button';
@@ -25,7 +25,6 @@ export function Room() {
     const { title, questions } = useRoom(roomId);
 
     async function HandleSendQuestion(event: FormEvent) {
-        console.log(roomId);
         event.preventDefault();
 
 
@@ -50,6 +49,7 @@ export function Room() {
         };
 
         await database.ref(`rooms/${roomId}/questions`).push(question);
+        setNewQuestion('');
     }
 
     async function HandleLikeQuestion(questionId: string, likeId: string | undefined) {
@@ -70,7 +70,7 @@ export function Room() {
 
                     <img src={logoImg}
                         alt="Letmeask"
-                        onClick={()=> window.location.href = "/"}
+                        onClick={() => window.location.href = "/"}
                     />
 
                     <RoomCode code={roomId} />
@@ -87,8 +87,9 @@ export function Room() {
                 <form onSubmit={HandleSendQuestion}>
                     <textarea
                         placeholder="O que você quer perguntar?"
-                        onChange={event => setNewQuestion(event.target.value)}
+                        onChange={({target}) => setNewQuestion(target.value)}
                         value={newQuestion}
+                    
                     />
 
 
@@ -100,7 +101,10 @@ export function Room() {
                                 <span>{user.name}</span>
                             </div>
                         ) : (
-                            <span>Para enviar uma pergunta, <button>faça o seu login</button>.</span>
+                            <span>Para enviar uma pergunta, <button
+                                onClick={() => window.location.href = "/"}
+                            >faça o seu login</button>.
+                            </span>
                         )}
 
                         <Button type="submit" disabled={!user}>
