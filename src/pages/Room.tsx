@@ -97,7 +97,7 @@ export function Room() {
 
                         {user ? (
                             <div className="user-info">
-                                <img src={user.avatar} alt={user.name} />
+                                <img src={user.avatar} alt={user.name} referrerPolicy='no-referrer'/>
                                 <span>{user.name}</span>
                             </div>
                         ) : (

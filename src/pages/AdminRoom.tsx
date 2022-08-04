@@ -29,11 +29,13 @@ export function AdminRoom() {
     const { title, questions } = useRoom(roomId);
 
     async function HandleEndRoom() {
-        await database.ref(`rooms/${roomId}`).update({
-            endedAt: new Date(),
-        })
+        if (window.confirm('Tem certeza que você deseja encerrar esta sala?')) {
+            await database.ref(`rooms/${roomId}`).update({
+                endedAt: new Date(),
+            })
+            navigate('/');
+        }
 
-        navigate('/');
     }
 
     async function HandleDeleteQuestion(questionId: string) {
@@ -64,7 +66,6 @@ export function AdminRoom() {
 
                     <img src={logoImg}
                         alt="Letmeask"
-                        onClick={() => window.location.href = "/"}
                     />
                     <div>
                         <RoomCode code={roomId} />
@@ -78,19 +79,18 @@ export function AdminRoom() {
                     <h1>Sala: {title}</h1>
                     {questions.length > 0 && <span>{questions.length} pergunta(s)</span>}
                 </div>
-                
-                
+
                 <div className='question-list'>
 
-                    {questionListIsEmpty && 
-                    <div className='Balloons'>
-                        <img 
-                            src={emptyQuestionImg}
-                            alt="Sem perguntas"
-                        />
-                    </div>
+                    {questionListIsEmpty &&
+                        <div className='Balloons'>
+                            <img
+                                src={emptyQuestionImg}
+                                alt="Sem perguntas"
+                            />
+                        </div>
                     }
-                    
+
                     {questions.map((question) => {
 
                         return (
