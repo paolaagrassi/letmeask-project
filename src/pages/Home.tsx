@@ -1,95 +1,82 @@
-import { useNavigate } from 'react-router-dom';
-import { FormEvent, useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import { FormEvent, useState } from "react";
 
-import { Button } from '../components/Button';
+import { Button } from "../components/Button";
 
-import { useAuth } from '../hooks/useAuth';
-import { database } from '../services/Firebase';
+import { useAuth } from "../hooks/useAuth";
+import { database } from "../services/Firebase";
 
-import illustrationImg from '../assets/images/illustration.svg';
-import logoImg from '../assets/images/logo.svg';
-import googleIconImg from '../assets/images/google-icon.svg';
-import '../styles/auth.scss';
-
+import logoImg from "../assets/images/logo.svg";
+import prezidentsImg from "../assets/images/memes/prezidents.png";
+import googleIconImg from "../assets/images/google-icon.svg";
+import "../styles/auth.scss";
 
 export function Home() {
+  const navigate = useNavigate();
+  const { user, signInWithGoogle } = useAuth();
+  const [roomCode, setRoomCode] = useState("");
 
-    const navigate = useNavigate();
-    const { user, signInWithGoogle } = useAuth();
-    const [roomCode, setRoomCode] = useState('');
+  const isNotUserAuthenticated = !user;
 
-    const isNotUserAuthenticated = (!user);
+  async function handleCreateRoom() {
+    if (isNotUserAuthenticated) {
+      await signInWithGoogle();
+    }
+    navigate("/rooms/new");
+  }
 
-    async function handleCreateRoom() {
-        if (isNotUserAuthenticated) {
-            await signInWithGoogle();
-        }
-        navigate('/rooms/new');
+  async function handleJoinRoom(event: FormEvent) {
+    event.preventDefault();
+
+    const isRoomCodeEmpty = roomCode.trim() == "";
+
+    if (isRoomCodeEmpty) {
+      return;
     }
 
-    async function handleJoinRoom(event: FormEvent) {
-        event.preventDefault();
+    const roomRef = await database.ref(`rooms/${roomCode}`).get();
 
-        const isRoomCodeEmpty = (roomCode.trim() == '');
+    const isntExistingRoom = !roomRef.exists();
 
-        if (isRoomCodeEmpty) {
-            return;
-        }
-
-        const roomRef = await database.ref(`rooms/${roomCode}`).get();
-
-        const isntExistingRoom = (!roomRef.exists())
-
-        if (isntExistingRoom) {
-            alert("[ERRO!] Sala não encontrada. [ERRO!]");
-            return;
-        }
-
-        const roomIsAlreadyClosed = (roomRef.val().endedAt);
-
-        if (roomIsAlreadyClosed) {
-            alert("A sala já foi encerrada.")
-            return;
-        }
-
-        navigate(`/rooms/${roomCode}`)
+    if (isntExistingRoom) {
+      alert("Telpa nav atrasta!");
+      return;
     }
 
-    return (
-        <div id="page-auth">
-            <aside>
-                <img src={illustrationImg} alt="Illustration symbolizing  questions and answers" />
-                <strong> Crie salas de Q&amp;A ao-vivo</strong>
-                <p>Tire as dúvidas da sua audiência durante a live.</p>
-            </aside>
+    const roomIsAlreadyClosed = roomRef.val().endedAt;
 
-            <main>
+    if (roomIsAlreadyClosed) {
+      alert("Istaba jau slēgta");
+      return;
+    }
 
-                <div className="main-content">
-                    <img src={logoImg} alt="Letmeask" />
+    navigate(`/rooms/${roomCode}`);
+  }
 
-                    <button onClick={handleCreateRoom} className="create-room">
-                        <img src={googleIconImg} alt="Google logo" />
-                        Crie sua sala com o Google
-                    </button>
-                    <div className="divider">
-                        ou entre em uma sala
-                    </div>
+  return (
+    <div id="page-auth">
+      <main>
+        <div className="main-content">
+          {/* <img src={logoImg} alt="Letmeask" /> */}
+          <img src={prezidentsImg} alt="Letmeask" style={{width: '170px', marginBottom: '-30px'}}/>
 
-                    <form onSubmit={handleJoinRoom}>
-                        <input
-                            type="text"
-                            placeholder="Digite o código da sala"
-                            onChange={event => setRoomCode(event.target.value)}
-                            value={roomCode}
-                        />
-                        <Button type="submit">
-                            Entrar na sala
-                        </Button>
-                    </form>
-                </div>
-            </main>
+          <button onClick={handleCreateRoom} className="create-room">
+            <img src={googleIconImg} alt="Google logo" />
+            Izveidot jautājumu istabu ar Google
+          </button>
+          <div className="divider">vai pievienoties eksistējošai istabai</div>
 
+          <form onSubmit={handleJoinRoom}>
+            <input
+              type="text"
+              placeholder="Ievadiet istabas kodu"
+              onChange={(event) => setRoomCode(event.target.value)}
+              value={roomCode}
+            />
+            <Button type="submit">Ienākt istabā</Button>
+          </form>
         </div>
-    )
+      </main>
+    </div>
+  );
 }

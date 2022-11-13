@@ -1,36 +1,36 @@
 .room-code {
-    height: 40px;
-    border-radius: 8px;
-    overflow: hidden;
+  height: 40px;
+  border-radius: 8px;
+  overflow: hidden;
 
-    background: #FFF;
-    border: 1px solid #440052a2;
-    cursor: pointer;
+  background: #fff;
+  border: 1px solid #440052a2;
+  cursor: pointer;
+  display: flex;
+
+  div {
+    background: #440052;
+    padding: 0 12px 100% 12px;
     display: flex;
+    justify-content: center;
+    align-items: center;
 
-    div {
-        background: #440052;
-        padding: 0 12px 100% 12px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        >img {
-            height: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 50%;
-        }
+    > img {
+      height: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 50%;
     }
+  }
 
-    span {
-        display: block;
-        align-self: center;
-        flex: 1;
-        padding: 0 16px 0 12px;
-        width: 230px;
-        font-size: 14px;
-        font-weight: 500;
-    }
+  span {
+    display: block;
+    align-self: center;
+    flex: 1;
+    padding: 0 16px 0 12px;
+    width: 230px;
+    font-size: 14px;
+    font-weight: 500;
+  }
 }

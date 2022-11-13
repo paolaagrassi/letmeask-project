@@ -1,141 +1,130 @@
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 
-import logoImg from '../assets/images/logo.svg';
-import deleteImg from '../assets/images/delete.svg';
-import checkImg from '../assets/images/check.svg';
-import answerImg from '../assets/images/answer.svg';
-import emptyQuestionImg from '../assets/images/Group-2.png';
+import logoImg from "../assets/images/logo.svg";
+import deleteImg from "../assets/images/delete.svg";
+import checkImg from "../assets/images/check.svg";
+import answerImg from "../assets/images/answer.svg";
+import emptyQuestionImg from "../assets/images/Group-2.png";
 
-import { Button } from '../components/Button';
-import { Question } from '../components/Question';
+import { Button } from "../components/Button";
+import { Question } from "../components/Question";
 
-import { RoomCode } from '../components/RoomCode';
-import { useRoom } from '../hooks/useRoom';
+import { RoomCode } from "../components/RoomCode";
+import { useRoom } from "../hooks/useRoom";
 
-import '../styles/room.scss';
+import "../styles/room.scss";
 
-import { database } from '../services/Firebase';
-import { useNavigate } from 'react-router-dom';
+import { database } from "../services/Firebase";
+import { useNavigate } from "react-router-dom";
 
 type RoomParams = {
-    id: string;
-}
+  id: string;
+};
 export function AdminRoom() {
-    const navigate = useNavigate();
-    const params = useParams<RoomParams>();
+  const navigate = useNavigate();
+  const params = useParams<RoomParams>();
 
-    const roomId = params.id!;
+  const roomId = params.id!;
 
-    const { title, questions } = useRoom(roomId);
+  const { title, questions } = useRoom(roomId);
 
-    async function HandleEndRoom() {
-        if (window.confirm('Tem certeza que você deseja encerrar esta sala?')) {
-            await database.ref(`rooms/${roomId}`).update({
-                endedAt: new Date(),
-            })
-            navigate('/');
-        }
-
+  async function HandleEndRoom() {
+    if (window.confirm("Vai tiešām vēlaties aizvērt šo telpu?")) {
+      await database.ref(`rooms/${roomId}`).update({
+        endedAt: new Date(),
+      });
+      navigate("/");
     }
+  }
 
-    async function HandleDeleteQuestion(questionId: string) {
-        if (window.confirm('Tem certeza que você deseja remover esta pergunta?')) {
-            await database.ref(`rooms/${roomId}/questions/${questionId}`).remove();
-        }
+  async function HandleDeleteQuestion(questionId: string) {
+    if (window.confirm("Vai tiešām vēlaties noņemt šo jautājumu?")) {
+      await database.ref(`rooms/${roomId}/questions/${questionId}`).remove();
     }
+  }
 
-    async function HandleCheckQuestionAnswered(questionId: string) {
-        await database.ref(`rooms/${roomId}/questions/${questionId}`).update({
-            isAnswered: true,
-        });
-    }
+  async function HandleCheckQuestionAnswered(questionId: string) {
+    await database.ref(`rooms/${roomId}/questions/${questionId}`).update({
+      isAnswered: true,
+    });
+  }
 
-    async function HandleHighlightQuestion(questionId: string) {
-        await database.ref(`rooms/${roomId}/questions/${questionId}`).update({
-            isHighlighted: true,
-        });
-    }
+  async function HandleHighlightQuestion(questionId: string) {
+    await database.ref(`rooms/${roomId}/questions/${questionId}`).update({
+      isHighlighted: true,
+    });
+  }
 
-    let questionListIsEmpty = (questions.length == 0);
+  let questionListIsEmpty = questions.length == 0;
 
-    return (
+  return (
+    <div id="page-room">
+      <header>
+        <div className="content">
+          <img src={logoImg} alt="Letmeask" />
+          <div>
+            <RoomCode code={roomId} />
+            <Button isOutlined onClick={HandleEndRoom}>
+              Izvērt telpu
+            </Button>
+          </div>
+        </div>
+      </header>
 
-        <div id="page-room">
-            <header>
-                <div className="content">
-
-                    <img src={logoImg}
-                        alt="Letmeask"
-                    />
-                    <div>
-                        <RoomCode code={roomId} />
-                        <Button isOutlined onClick={HandleEndRoom}>Encerrar sala</Button>
-                    </div>
-                </div>
-            </header>
-
-            <main>
-                <div className="room-title">
-                    <h1>Sala: {title}</h1>
-                    {questions.length > 0 && <span>{questions.length} pergunta(s)</span>}
-                </div>
-
-                <div className='question-list'>
-
-                    {questionListIsEmpty &&
-                        <div className='Balloons'>
-                            <img
-                                src={emptyQuestionImg}
-                                alt="Sem perguntas"
-                            />
-                        </div>
-                    }
-
-                    {questions.map((question) => {
-
-                        return (
-                            <Question
-                                key={question.id}
-                                content={question.content}
-                                author={question.author}
-                                isAnswered={question.isAnswered}
-                                isHighlighted={question.isHighlighted}
-                            >
-                                {!question.isAnswered && (
-                                    <>
-                                        <button
-                                            type="button"
-                                            onClick={() => HandleCheckQuestionAnswered(question.id)}
-                                        >
-                                            <img src={checkImg} alt="Marcar pergunta como respondida" />
-                                        </button>
-
-                                        <button
-                                            type="button"
-                                            onClick={() => HandleHighlightQuestion(question.id)}
-                                        >
-                                            <img src={answerImg} alt="Dar destaque à pergunta" />
-                                        </button>
-                                    </>
-                                )}
-
-
-                                <button
-                                    type="button"
-                                    onClick={() => HandleDeleteQuestion(question.id)}
-                                >
-                                    <img src={deleteImg} alt="Remover pergunta" />
-                                </button>
-
-
-                            </Question>
-
-
-                        )
-                    })}
-                </div>
-            </main>
+      <main>
+        <div className="room-title">
+          <h1>Telpa: {title}</h1>
+          {questions.length > 0 && <span>{questions.length} pergunta(s)</span>}
         </div>
 
-    )
+        <div className="question-list">
+          {questionListIsEmpty && (
+            <div className="Balloons">
+              <img src={emptyQuestionImg} alt="Sem perguntas" />
+            </div>
+          )}
+
+          {questions.map((question) => {
+            return (
+              <Question
+                key={question.id}
+                content={question.content}
+                author={question.author}
+                isAnswered={question.isAnswered}
+                isHighlighted={question.isHighlighted}
+              >
+                {!question.isAnswered && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => HandleCheckQuestionAnswered(question.id)}
+                    >
+                      <img
+                        src={checkImg}
+                        alt="Atzīmēt jautājumu kā atbildētu"
+                      />
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => HandleHighlightQuestion(question.id)}
+                    >
+                      <img src={answerImg} alt="Izcelt jautājumu" />
+                    </button>
+                  </>
+                )}
+
+                <button
+                  type="button"
+                  onClick={() => HandleDeleteQuestion(question.id)}
+                >
+                  <img src={deleteImg} alt="Noņemt jautājumu" />
+                </button>
+              </Question>
+            );
+          })}
+        </div>
+      </main>
+    </div>
+  );
 }
