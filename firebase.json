@@ -3,7 +3,7 @@
     "rules": "database.rules.json"
   },
   "hosting": {
-    "public": "https://github.com/dstabulis/letmeask-project",
+    "public": "build",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -15,17 +15,5 @@
         "destination": "/index.html"
       }
     ]
-  },
-  "emulators": {
-    "database": {
-      "port": 9000
-    },
-    "hosting": {
-      "port": 5000
-    },
-    "ui": {
-      "enabled": true
-    },
-    "singleProjectMode": true
   }
 }
