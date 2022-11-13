@@ -1,7 +1,7 @@
 import { FormEvent, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import logoImg from "../assets/images/logo.svg";
+// import logoImg from "../assets/images/logo.svg";
 import delfiImg from "../assets/images/memes/delfi.png";
 import levitsImg from "../assets/images/memes/levits.png";
 import rtuImg from "../assets/images/memes/rtu.png";
@@ -32,7 +32,7 @@ export function Room() {
   async function HandleSendQuestion(event: FormEvent) {
     event.preventDefault();
 
-    const isTextAreaEmpty = newQuestion.trim() == "";
+    const isTextAreaEmpty = newQuestion.trim() === "";
 
     if (isTextAreaEmpty) {
       return;

@@ -55,7 +55,7 @@ export function AdminRoom() {
     });
   }
 
-  let questionListIsEmpty = questions.length == 0;
+  let questionListIsEmpty = questions.length === 0;
 
   return (
     <div id="page-room">

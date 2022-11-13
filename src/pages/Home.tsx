@@ -6,7 +6,7 @@ import { Button } from "../components/Button";
 import { useAuth } from "../hooks/useAuth";
 import { database } from "../services/Firebase";
 
-import logoImg from "../assets/images/logo.svg";
+// import logoImg from "../assets/images/logo.svg";
 import prezidentsImg from "../assets/images/memes/prezidents.png";
 import googleIconImg from "../assets/images/google-icon.svg";
 import "../styles/auth.scss";
@@ -28,7 +28,7 @@ export function Home() {
   async function handleJoinRoom(event: FormEvent) {
     event.preventDefault();
 
-    const isRoomCodeEmpty = roomCode.trim() == "";
+    const isRoomCodeEmpty = roomCode.trim() === "";
 
     if (isRoomCodeEmpty) {
       return;

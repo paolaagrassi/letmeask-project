@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FormEvent, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 
-import logoImg from "../assets/images/logo.svg";
+// import logoImg from "../assets/images/logo.svg";
 import qfdImg from "../assets/images/memes/qfd.png";
 
 import "../styles/auth.scss";
@@ -18,7 +18,7 @@ export function NewRoom() {
   async function handleCreateNewRoom(event: FormEvent) {
     event.preventDefault();
 
-    const isNewRoomInputEmpty = newRoom.trim() == "";
+    const isNewRoomInputEmpty = newRoom.trim() === "";
     if (isNewRoomInputEmpty) {
       return;
     }
